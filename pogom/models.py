@@ -634,6 +634,7 @@ class WorkerStatus(BaseModel):
     fail = IntegerField()
     no_items = IntegerField()
     skip = IntegerField()
+    captchas = IntegerField()
     last_modified = DateTimeField(index=True)
     message = CharField(max_length=255)
 
@@ -1277,4 +1278,9 @@ def database_migrate(db, old_ver):
         migrate(
             migrator.add_column('pokemon', 'last_modified', DateTimeField(null=True, index=True)),
             migrator.add_column('pokestop', 'last_updated', DateTimeField(null=True, index=True))
+        )
+
+    if old_ver < 10:
+        migrate(
+            migrator.add_column('workerstatus', 'captchas', IntegerField(default=0))
         )
